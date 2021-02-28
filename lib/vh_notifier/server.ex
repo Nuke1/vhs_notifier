@@ -29,6 +29,7 @@ defmodule Server do
 
 		case :httpc.request(:post, {api_prefix, [], 'application/json', data}, [], []) do
 			{:ok, {{_,400, _}, _res, _val}} -> {:stop, :normal, state}
+			{:ok, {{_,403, _}, _res, _val}} -> {:stop, :normal, state}
 			res ->
 				send("Transaction: " <> txId <> "\nStatus: registered")
 				Logger.info("res received #{inspect(res)}")
