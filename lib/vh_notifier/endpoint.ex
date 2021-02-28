@@ -44,6 +44,11 @@ defmodule VhNotifier.Endpoint do
     end
   end
 
+  get "/alltx" do
+    list = Sup.get_all_transactions()
+    send_resp(conn, 200, Jason.encode!(list))
+  end
+
   post "/webhook" do
     {:ok, body, _conn} = read_body(conn)
     try do

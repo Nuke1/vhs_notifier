@@ -1,21 +1,52 @@
-# VhNotifier
+# Virtually Human Notifier
 
-**TODO: Add description**
+An app using this source code is up and running on Heroku.
 
-## Installation
+## Api Endpoints:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `vh_notifier` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:vh_notifier, "~> 0.1.0"}
-  ]
-end
+### - Add new transaction:
+```
+https://vhs-notifier.herokuapp.com/addtx/?id=<ethereum-transaction-hash>
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/vh_notifier](https://hexdocs.pm/vh_notifier).
+## - Get all transactions:
+```
+https://vhs-notifier.herokuapp.com/alltx
+```
 
+### Webhook:
+```
+https://vhs-notifier.herokuapp.com/webhook
+```
+
+Currently the status is pushed on slack webhook provided by VHS.
+
+
+
+## Libraries Used
+
+### Hex Dependencies:
+
+```elixir
+defp deps do
+    [
+      {:plug, "~> 1.6"},
+      {:cowboy, "~> 2.4"},
+      {:plug_cowboy, "~> 2.0"},   #  Plug & cowboy are used to provide api endpoints
+      {:jason, "~> 1.2"}          #  To encode and decode json
+    ]
+end
+```
+### Erlang/OTP builtin libraries used:
+
+```
+mnesia - For storing process id and Hash
+httpc - To make http requests
+```
+
+### Erlang and Elixir Version:
+
+```
+erlang_version=22.0   
+elixir_version=1.9.1
+```

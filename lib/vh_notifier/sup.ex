@@ -44,7 +44,11 @@ defmodule Sup do
 	end
 
 	def get_all_transactions() do
-		:mnesia.transaction(fn -> :mnesia.match_object({Session, :_, :_}) end)
+		case :mnesia.transaction(fn -> :mnesia.match_object({Session, :_, :_}) end) do
+			{:atomic, []} -> []
+			{:atomic, data} ->
+				Enum.map(data, fn ({_,tx,_}) -> tx end)
+			end
 	end
 
 	def update_tx_status(txId, status) do
