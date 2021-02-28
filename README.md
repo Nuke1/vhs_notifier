@@ -1,20 +1,20 @@
-# Virtually Human Notifier
+# Virtually Human: Notifier
 
 An app using this source code is up and running on Heroku.
 
-## Api Endpoints:
+## API Endpoints:
 
 ### - Add new transaction:
 ```
 https://vhs-notifier.herokuapp.com/addtx/?id=<ethereum-transaction-hash>
 ```
 
-## - Get all transactions:
+### - Get all transactions:
 ```
 https://vhs-notifier.herokuapp.com/alltx
 ```
 
-### Webhook:
+### - Webhook:
 ```
 https://vhs-notifier.herokuapp.com/webhook
 ```
@@ -37,7 +37,7 @@ defp deps do
     ]
 end
 ```
-### Erlang/OTP builtin libraries used:
+### Erlang/OTP built-in libraries used:
 
 ```
 mnesia - For storing process id and Hash
