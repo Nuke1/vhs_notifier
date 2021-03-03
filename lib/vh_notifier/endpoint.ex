@@ -4,6 +4,7 @@ defmodule VhNotifier.Endpoint do
   use Plug.ErrorHandler
   import Plug.Conn
   require Logger
+
   def child_spec(opts) do
     %{
       id: __MODULE__,
@@ -28,44 +29,46 @@ defmodule VhNotifier.Endpoint do
 
   plug(:dispatch)
 
-
-  get "/" do
-		send_resp(conn, 200, "Hello There!")
-	end
-
+  # API Endpoint - Recieves Transaction Id to start monitoring.
   get "/addtx/" do
     conn = fetch_query_params(conn)
     %{"id" => txId} = conn.params
     ret = Sup.add_tx_process(txId)
     Logger.info("data #{inspect(txId)}")
+
     case ret do
-      :true ->  send_resp(conn, 200, "Transaction added successfully !")
+      true -> send_resp(conn, 200, "Transaction added successfully !")
       _ -> send_resp(conn, 200, "Transaction already exists !")
     end
   end
 
+  # API Endpoint - Returns all pending transactions.
   get "/alltx" do
     list = Sup.get_all_transactions()
     send_resp(conn, 200, Jason.encode!(list))
   end
 
+  # Endpoint- Receives status update from Blocknative.
   post "/webhook" do
     {:ok, body, _conn} = read_body(conn)
+
     try do
       Logger.info("data #{inspect(body)}")
-      {:ok,data} = Jason.decode(body)
-        txId = data["hash"]
-        status = data["status"]
-        case status do
-          "pending" ->  :ok
-          _ ->  Sup.update_tx_status(txId, status)
-        end
-        Logger.info("data #{inspect(data)}")
-        send_resp(conn, 200, "Got it #{data}")
-    rescue error ->
-      send_resp(conn, 200, "Invalid ")
-    end
+      {:ok, data} = Jason.decode(body)
+      txId = data["hash"]
+      status = data["status"]
 
+      case status do
+        "pending" -> :ok
+        _ -> Sup.update_tx_status(txId, status)
+      end
+
+      Logger.info("data #{inspect(data)}")
+      send_resp(conn, 200, "Got it #{data}")
+    rescue
+      error ->
+        send_resp(conn, 200, "Invalid ")
+    end
   end
 
   match _ do
